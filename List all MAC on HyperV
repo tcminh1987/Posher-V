@@ -1,0 +1,16 @@
+# Get all VM's from Localhost (change to SCVMM Server if running remote) 
+$AllVMS = Get-SCVirtualMachine -VMMServer localhost
+$DynamicVMs = @()
+
+# For each VM, check Virtual Network Adapters if Mac = Dynamic. 
+foreach ($vm in $AllVMS ) {
+   $vmnics = $vm | Get-SCVirtualNetworkAdapter
+     if ($vmnics.MACAddressType -eq "Dynamic") {     
+     $DynamicVMs += $vm.Name
+     }
+   }
+
+# List all VM's with a Dynamic Mac address. 
+$DynamicVMs | Sort-Object
+Write-Output "--------"
+$DynamicVMs.Count
